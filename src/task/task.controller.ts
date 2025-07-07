@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/task.dto';
 import { TaskService } from './task.service';
@@ -61,6 +62,8 @@ export class TaskController {
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (!await this.taskService.getTaskById(id))
+      throw new BadRequestException('Task not found');
     const filepath = await this.fileUploadService.uploadFile(file);
     return this.taskService.uploadFilePath(id, filepath);
   }

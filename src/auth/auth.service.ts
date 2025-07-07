@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -21,10 +22,11 @@ export class AuthService {
     comfirmpass: string,
   ): Promise<{ access_token: string; refresh_token: string }> {
     if (password !== comfirmpass) {
-      throw new UnauthorizedException('password do not match comfirm password');
+      throw new BadRequestException('password do not match comfirm password');
     }
     if (await this.usersService.isDuplicate(email)) {
-      throw new ConflictException('Duplicate email');
+      console.log(await this.usersService.isDuplicate(email));
+      throw new BadRequestException('Duplicate email');
     }
     const user = new User();
     user.email = email;
@@ -50,7 +52,7 @@ export class AuthService {
   ): Promise<{ access_token: string; refresh_token: string }> {
     const user = await this.usersService.findOne(email);
     if (!user || !(await bcrypt.compare(pass, user.password))) {
-      throw new UnauthorizedException('wrong password');
+      throw new BadRequestException('wrong password');
     }
 
     const payload = { sub: user.id, email: user.email };

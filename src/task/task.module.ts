@@ -5,6 +5,7 @@ import { TaskService } from './task.service';
 import { TaskController } from './task.controller';
 import { FileUploadService } from './fileUpload.service';
 import { MulterModule } from '@nestjs/platform-express/multer/multer.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { MulterModule } from '@nestjs/platform-express/multer/multer.module';
     MulterModule.register({
       dest: './uploads',
     }),
+    UserModule
   ],
   providers: [TaskService, FileUploadService],
   controllers: [TaskController],
