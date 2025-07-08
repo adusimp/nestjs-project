@@ -15,8 +15,8 @@ export class UserService {
     const SaltOrRounds = 10;
     userData.password = await bcrypt.hash(userData.password, SaltOrRounds);
     const date = new Date();
-    userData.CreatedAt = getFullDateTime();
-    userData.UpdatedAt = getFullDateTime();
+    userData.CreatedAt = date;
+    userData.UpdatedAt = date;
 
     const data = this.userRepository.create(userData);
     return await this.userRepository.save(data);

@@ -17,9 +17,9 @@ export class Task {
   @Column({ default: '' })
   file_path: string;
 
-  @Column()
-  CreatedAt: string;
+  @Column({type:'timestamp'})
+  CreatedAt: Date;
 
-  @Column()
-  UpdatedAt: string;
+  @Column({type:'timestamp'})
+  UpdatedAt: Date;
 }

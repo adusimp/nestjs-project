@@ -10,8 +10,9 @@ export class TaskService {
   ) {}
 
   async addTask(data: Partial<Task>) {
-    data.CreatedAt = getFullDateTime();
-    data.UpdatedAt = getFullDateTime();
+    const date = new Date();
+    data.CreatedAt = date;
+    data.UpdatedAt = date;
     const task = this.taskRepository.create(data);
     return await this.taskRepository.save(task);
   }
@@ -39,8 +40,10 @@ export class TaskService {
   async getTaskById(id: number): Promise<Task | null> {
     return await this.taskRepository.findOneBy({ id });
   }
-  
+
   async uploadFilePath(id: number, path: string) {
-    return await this.taskRepository.update(id, { file_path: path });
+    await this.taskRepository.update(id, { file_path: path });
+    const date = new Date()
+    await this.taskRepository.update(id,{UpdatedAt:date})
   }
 }

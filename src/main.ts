@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -25,6 +26,14 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:3000', // Cho phép Next.js frontend
   });
+   const config = new DocumentBuilder()
+    .setTitle('Task Management')
+    .setDescription('')
+    .setVersion('1.0')
+    
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
   await app.listen(process.env.PORT ?? 3002);
 }
 bootstrap();

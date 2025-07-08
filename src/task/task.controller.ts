@@ -14,11 +14,8 @@ import {
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/task.dto';
 import { TaskService } from './task.service';
-
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
-import { FileUploadService } from './fileUpload.service';
+import { FileUploadService, multerconfig } from './fileUpload.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(AuthGuard)
@@ -43,20 +40,7 @@ export class TaskController {
 
   @Post(':id/upload')
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          cb(null, Date.now() + extname(file.originalname));
-        },
-      }),
-      fileFilter: (req, file, cb) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          return cb(new Error('Chỉ cho phép file ảnh!'), false);
-        }
-        cb(null, true);
-      },
-    }),
+    FileInterceptor('file',multerconfig)
   )
   async uploadTaskFile(
     @Param('id', ParseIntPipe) id: number,

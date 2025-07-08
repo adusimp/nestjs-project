@@ -9,12 +9,14 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
 import * as bcrypt from 'bcrypt';
 import { jwtConstants } from './constants';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
     private jwtService: JwtService,
+    private config: ConfigService,
   ) {}
   async signUp(
     email: string,
@@ -38,11 +40,10 @@ export class AuthService {
     };
 
     const access_token = await this.jwtService.signAsync(payload, {
-      secret: 'ACCESS_TOKEN_SECRET',
-      expiresIn: jwtConstants.expiresTime,
+      secret: this.config.get<string>('ACCESS_TOKEN_SECRET', 'default'),
     });
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: 'REFRESH_TOKEN_SECRET',
+      secret: this.config.get<string>('REFRESH_TOKEN_SECRET', 'default'),
     });
     return { access_token, refresh_token };
   }
@@ -57,11 +58,10 @@ export class AuthService {
 
     const payload = { sub: user.id, email: user.email };
     const access_token = await this.jwtService.signAsync(payload, {
-      secret: 'ACCESS_TOKEN_SECRET',
-      expiresIn: jwtConstants.expiresTime,
+      secret: this.config.get<string>('ACCESS_TOKEN_SECRET', 'default'),
     });
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: 'REFRESH_TOKEN_SECRET',
+      secret: this.config.get<string>('REFRESH_TOKEN_SECRET', 'default'),
     });
     return { access_token, refresh_token };
   }
@@ -72,8 +72,7 @@ export class AuthService {
     const access_token = await this.jwtService.signAsync(
       { sub: payload.sub, email: payload.email },
       {
-        secret: 'ACCESS_TOKEN_SECRET',
-        expiresIn: jwtConstants.expiresTime,
+        secret: this.config.get<string>('ACCESS_TOKEN_SECRET', 'default'),
       },
     );
     return { access_token };
