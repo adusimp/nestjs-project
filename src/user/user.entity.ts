@@ -1,19 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Role } from "src/enums/role.enum";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity({name:"users"})
 export class User{
     @PrimaryGeneratedColumn()
     id:number;
 
-    @Column()
-    email : string;
+    @Column({name:'user_name'})
+    username : string;
 
     @Column()
     password: string;
 
-    @Column({type:'timestamp'})
-    CreatedAt:Date;
+    @CreateDateColumn({type:'timestamp',name:'created_at'})
+    createdAt:Date;
 
-    @Column({type:'timestamp'})
-    UpdatedAt:Date;
+    @UpdateDateColumn({type:'timestamp',name:'updated_at'})
+    updatedAt:Date;
 }
