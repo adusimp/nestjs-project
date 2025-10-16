@@ -10,18 +10,26 @@ import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: 'postgresql://postgres.xydfkjuedkkuexuiikxb:moichoigame2@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       autoLoadEntities: true,
-      synchronize: true, // chỉ dùng trong dev
+      synchronize: true,
+      ssl: {
+        rejectUnauthorized: false, // ✅ Bắt buộc cho RDS nếu không có chứng chỉ CA
+      },
     }),
-    ConfigModule.forRoot({isGlobal:true}),
-     MulterModule.register({
+
+    MulterModule.register({
       dest: './uploads',
     }),
     UserModule,
-    PostModule
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
