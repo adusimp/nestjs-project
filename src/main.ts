@@ -14,18 +14,17 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: process.env.NEXT_PUBLIC_URL, 
-    credentials: true
+    origin: 'https://frontend-project-9a3e.onrender.com',
+    credentials: true,
   });
-   const config = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle('Task Management')
     .setDescription('')
     .setVersion('1.0')
-    
+
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
   await app.listen(process.env.PORT ?? 3002);
-  
 }
 bootstrap();
